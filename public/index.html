@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>30c3 twitterwall - Congress Everywherepl</title>
+<meta charset="utf-8" />
+<style type="text/css" media="screen">
+html {
+	background-image: url(img/bg.jpg);
+	background-size: cover;
+	overflow:hidden;
+}
+	
+body {
+	vertical-align: top;
+}
+
+li img { 
+	margin-right: 10px;
+	display: block;
+	float: left;
+	width: 48px;
+	height: 48px;
+}
+
+div.text {
+	float: left;
+	width: 500px;
+	padding: 0 20px 0 0;
+	font-size: 160%;
+	font-family: exo;
+	color: white;
+	line-hight: 110%;
+}
+
+	div.container {
+	clear: both;
+}
+
+h6 {
+	margin: 0;
+}
+
+p {
+	vertical-align: top;
+}
+
+ul {
+	list-style: none;
+}
+
+header {
+	text-align: center;
+	margin: 0 auto;
+	display: block;
+	font-family: exo;
+	color: white;
+	font-size: 350%;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	text-shadow: 2px 2px #c0c0c0;
+}
+
+ul#tweets {
+	margin: 0 auto;
+	padding: 0 0 0 75px;
+	text-shadow: 1px 1px #c0c0c0;
+}
+
+ul li {
+	display: inline-block;
+	width: 580px;
+	height: 200px;
+	margin-bottom: 20px;
+	margin-right: 20px;
+	background: rgba(0,76,85,0.8);
+	border-top-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+</style>
+<script src="/js/jquery.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+$(function() {
+		var feed = [];
+		var maxTweets = 9;
+		var countTweets = 0;
+		var socket = io.connect('http://localhost:3000');
+		socket.on('tweet', function (data) {
+		  data = data.data;
+		  console.log(data);
+		  var tid = countTweets%maxTweets;
+		  $('#tid_'+tid).remove();
+		  var avatar = data.user.profile_image_url;
+		  var $avatar = $('<img/>').attr('src', avatar);
+		  var $container = $('<div class="container"/>');
+		  var $text = $('<div class="text"/>');
+		  $text.append($('<h6/>').text('@'+data.user.screen_name));
+		  $text.append(data.text);
+		  $container.append($avatar);
+		  $container.append($text);
+		  var $tweet = $('<li/>').attr('id','tid_'+tid).append($container);
+		  $('#tweets').prepend($tweet);
+		  countTweets++;
+		});
+});
+</script>
+</head>
+<body>
+<header>30C3 Congress Everywhere</header>
+<ul id="tweets"> </ul>
+<footer></footer>
+</body>
+</html>
+
